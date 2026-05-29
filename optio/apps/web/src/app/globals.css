@@ -1,0 +1,562 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0d0d11;
+  --color-bg-subtle: #131317;
+  --color-bg-card: #1a1a20;
+  --color-bg-card-hover: #22222a;
+  --color-bg-hover: #282832;
+  --color-border: #2c2c36;
+  --color-border-strong: #3c3c48;
+  --color-text: #e8e5df;
+  --color-text-heading: #f4f2ed;
+  --color-text-muted: #807c88;
+  --color-primary: #6d28d9;
+  --color-primary-hover: #7c3aed;
+  --color-success: #34d399;
+  --color-warning: #f0a040;
+  --color-error: #f06060;
+  --color-info: #60a5fa;
+  --font-sans: var(--font-sora), "Sora", system-ui, sans-serif;
+  --font-mono: var(--font-ibm-mono), "IBM Plex Mono", ui-monospace, monospace;
+}
+
+/* Light theme overrides */
+html.light {
+  --color-bg: #f6f4f0;
+  --color-bg-subtle: #edebe6;
+  --color-bg-card: #ffffff;
+  --color-bg-card-hover: #f8f6f2;
+  --color-bg-hover: #e8e5e0;
+  --color-border: #dbd8d2;
+  --color-border-strong: #c8c5bf;
+  --color-text: #1a1a20;
+  --color-text-heading: #0d0d11;
+  --color-text-muted: #6b6862;
+  --color-primary: #7c3aed;
+  --color-primary-hover: #6d28d9;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+}
+
+/* Subtle film grain texture */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.022;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
+
+html.light body::after {
+  opacity: 0.012;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* Focus ring */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Smooth transitions on theme switch */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease !important;
+}
+
+/* ──────────────────────────────────────
+   Atmosphere & Texture
+   ────────────────────────────────────── */
+
+/* Warm ambient glow */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(109, 40, 217, 0.06), transparent 65%),
+    radial-gradient(ellipse 40% 30% at 100% 100%, rgba(96, 165, 250, 0.03), transparent 55%);
+  pointer-events: none;
+}
+
+html.light body::before {
+  background:
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(124, 58, 237, 0.04), transparent 65%),
+    radial-gradient(ellipse 40% 30% at 100% 100%, rgba(96, 165, 250, 0.02), transparent 55%);
+}
+
+/* ──────────────────────────────────────
+   Animations & Micro-interactions
+   ────────────────────────────────────── */
+
+/* Shimmer loading skeleton */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-hover) 25%,
+    var(--color-border) 50%,
+    var(--color-bg-hover) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+  border-radius: 0.5rem;
+}
+
+/* Animated gradient — slow-moving accent */
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animated-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(109, 40, 217, 0.08),
+    rgba(96, 165, 250, 0.05),
+    rgba(109, 40, 217, 0.06),
+    rgba(96, 165, 250, 0.03)
+  );
+  background-size: 400% 400%;
+  animation: gradient-shift 12s ease infinite;
+}
+
+html.light .animated-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(124, 58, 237, 0.06),
+    rgba(96, 165, 250, 0.04),
+    rgba(124, 58, 237, 0.05),
+    rgba(96, 165, 250, 0.02)
+  );
+  background-size: 400% 400%;
+  animation: gradient-shift 12s ease infinite;
+}
+
+/* Pulsing glow for status indicators */
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 3px 1px currentColor;
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 8px 3px currentColor;
+    opacity: 0.7;
+  }
+}
+
+.glow-dot {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Button press feedback */
+.btn-press {
+  transition: transform 0.1s ease;
+}
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+/* Card hover lift */
+.card-hover {
+  transition:
+    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 24px -4px rgba(0, 0, 0, 0.25),
+    0 2px 6px -1px rgba(0, 0, 0, 0.12);
+}
+html.light .card-hover:hover {
+  box-shadow:
+    0 8px 24px -4px rgba(0, 0, 0, 0.08),
+    0 2px 6px -1px rgba(0, 0, 0, 0.04);
+}
+
+/* Gradient divider line */
+.gradient-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-border) 20%,
+    var(--color-border) 80%,
+    transparent
+  );
+  border: none;
+}
+
+/* ──────────────────────────────────────
+   Glass & Surface Effects
+   ────────────────────────────────────── */
+
+.glass {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.glass-sidebar {
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  background: rgba(13, 13, 17, 0.92);
+}
+html.light .glass-sidebar {
+  background: rgba(246, 244, 240, 0.92);
+}
+
+/* Active nav — clean accent bar */
+.nav-active-glow {
+  box-shadow: inset 3px 0 0 0 var(--color-primary);
+  background: rgba(109, 40, 217, 0.06);
+}
+html.light .nav-active-glow {
+  box-shadow: inset 3px 0 0 0 var(--color-primary);
+  background: rgba(124, 58, 237, 0.06);
+}
+
+/* ──────────────────────────────────────
+   State-colored left borders (task cards)
+   ────────────────────────────────────── */
+
+.border-state-running {
+  border-left-color: var(--color-primary);
+}
+.border-state-completed,
+.border-state-pr_opened {
+  border-left-color: var(--color-success);
+}
+.border-state-failed {
+  border-left-color: var(--color-error);
+}
+.border-state-needs_attention,
+.border-state-waiting_on_deps {
+  border-left-color: var(--color-warning);
+}
+.border-state-queued,
+.border-state-provisioning {
+  border-left-color: var(--color-info);
+}
+.border-state-pending,
+.border-state-cancelled {
+  border-left-color: var(--color-border-strong);
+}
+
+/* ──────────────────────────────────────
+   State badge glow backgrounds
+   ────────────────────────────────────── */
+
+.badge-glow-primary {
+  background: rgba(109, 40, 217, 0.1);
+  box-shadow: 0 0 8px -2px rgba(109, 40, 217, 0.25);
+}
+.badge-glow-success {
+  background: rgba(52, 211, 153, 0.08);
+  box-shadow: 0 0 8px -2px rgba(52, 211, 153, 0.2);
+}
+.badge-glow-warning {
+  background: rgba(240, 160, 64, 0.08);
+  box-shadow: 0 0 8px -2px rgba(240, 160, 64, 0.2);
+}
+.badge-glow-error {
+  background: rgba(240, 96, 96, 0.08);
+  box-shadow: 0 0 8px -2px rgba(240, 96, 96, 0.2);
+}
+.badge-glow-info {
+  background: rgba(96, 165, 250, 0.08);
+  box-shadow: 0 0 8px -2px rgba(96, 165, 250, 0.2);
+}
+.badge-glow-muted {
+  background: rgba(128, 124, 136, 0.06);
+}
+
+html.light .badge-glow-primary {
+  background: rgba(124, 58, 237, 0.06);
+  box-shadow: 0 0 8px -2px rgba(124, 58, 237, 0.12);
+}
+html.light .badge-glow-success {
+  background: rgba(52, 211, 153, 0.06);
+  box-shadow: 0 0 8px -2px rgba(52, 211, 153, 0.1);
+}
+html.light .badge-glow-warning {
+  background: rgba(240, 160, 64, 0.06);
+  box-shadow: 0 0 8px -2px rgba(240, 160, 64, 0.1);
+}
+html.light .badge-glow-error {
+  background: rgba(240, 96, 96, 0.06);
+  box-shadow: 0 0 8px -2px rgba(240, 96, 96, 0.1);
+}
+html.light .badge-glow-info {
+  background: rgba(96, 165, 250, 0.06);
+  box-shadow: 0 0 8px -2px rgba(96, 165, 250, 0.1);
+}
+
+/* Cost pill */
+.cost-pill {
+  background: rgba(109, 40, 217, 0.06);
+  border: 1px solid rgba(109, 40, 217, 0.1);
+}
+html.light .cost-pill {
+  background: rgba(124, 58, 237, 0.05);
+  border: 1px solid rgba(124, 58, 237, 0.08);
+}
+
+/* Text gradient for hero numbers */
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-text-heading) 40%, var(--color-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+html.light .text-gradient {
+  background: linear-gradient(135deg, var(--color-text-heading) 40%, var(--color-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ──────────────────────────────────────
+   Entry Animations
+   ────────────────────────────────────── */
+
+@keyframes count-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-count-in {
+  animation: count-fade-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+.animate-slide-down {
+  animation: slide-down 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+  overflow: hidden;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-fade-in {
+  animation: fade-in 0.3s ease both;
+}
+
+/* Staggered page reveal */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-reveal {
+  animation: reveal-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.stagger > * {
+  opacity: 0;
+  animation: reveal-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.stagger > :nth-child(1) {
+  animation-delay: 0ms;
+}
+.stagger > :nth-child(2) {
+  animation-delay: 50ms;
+}
+.stagger > :nth-child(3) {
+  animation-delay: 100ms;
+}
+.stagger > :nth-child(4) {
+  animation-delay: 150ms;
+}
+.stagger > :nth-child(5) {
+  animation-delay: 200ms;
+}
+.stagger > :nth-child(6) {
+  animation-delay: 250ms;
+}
+.stagger > :nth-child(7) {
+  animation-delay: 300ms;
+}
+.stagger > :nth-child(8) {
+  animation-delay: 350ms;
+}
+.stagger > :nth-child(9) {
+  animation-delay: 400ms;
+}
+.stagger > :nth-child(10) {
+  animation-delay: 450ms;
+}
+
+/* ──────────────────────────────────────
+   Log entry styling
+   ────────────────────────────────────── */
+
+.log-thinking {
+  border-left: 2px solid rgba(109, 40, 217, 0.25);
+  padding-left: 0.75rem;
+  font-style: italic;
+  opacity: 0.85;
+  background: rgba(109, 40, 217, 0.02);
+}
+
+.log-tool-use {
+  border-left: 2px solid rgba(96, 165, 250, 0.35);
+  padding-left: 0.75rem;
+  background: rgba(96, 165, 250, 0.02);
+}
+
+.log-error {
+  border-left: 2px solid rgba(240, 96, 96, 0.35);
+  padding-left: 0.75rem;
+  background: rgba(240, 96, 96, 0.03);
+}
+
+.log-system {
+  border-left: 2px solid rgba(128, 124, 136, 0.2);
+  padding-left: 0.75rem;
+  background: rgba(128, 124, 136, 0.02);
+}
+
+/* ──────────────────────────────────────
+   Tooltips & Popovers
+   ────────────────────────────────────── */
+
+.glass-tooltip {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background: rgba(26, 26, 32, 0.92);
+  border: 1px solid rgba(44, 44, 54, 0.5);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.28),
+    0 2px 8px rgba(0, 0, 0, 0.16);
+}
+html.light .glass-tooltip {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(219, 216, 210, 0.8);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* Recharts custom tooltip */
+.recharts-custom-tooltip {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background: rgba(26, 26, 32, 0.94) !important;
+  border: 1px solid rgba(44, 44, 54, 0.5) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28) !important;
+}
+html.light .recharts-custom-tooltip {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border: 1px solid rgba(219, 216, 210, 0.8) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ──────────────────────────────────────
+   Respect reduced motion preferences
+   ────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .skeleton-shimmer {
+    animation: none;
+    background: var(--color-bg-hover);
+  }
+  .animated-gradient {
+    animation: none;
+  }
+  .glow-dot {
+    animation: none;
+    box-shadow: 0 0 3px 1px currentColor;
+  }
+  .card-hover:hover {
+    transform: none;
+  }
+  .animate-count-in,
+  .animate-slide-down,
+  .animate-fade-in,
+  .animate-reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .stagger > * {
+    opacity: 1;
+    animation: none;
+  }
+}

@@ -1,0 +1,7 @@
+**/out
+**/.next
+**/.turbo
+**/dist
+**/node_modules
+**/helm
+pnpm-lock.yaml
